@@ -5,7 +5,7 @@
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "gulp && npm run install:plugins",
+    "postinstall": "bower update && gulp && npm run install:plugins",
     "build": "gulp",
     "watch": "gulp watch",
     "install:browser": "cordova platform add browser",
@@ -20,11 +20,12 @@
     "run:android": "cordova run android",
     "run:ios": "cordova run ios",
     "run:windows": "cordova run windows",
-    "install:plugins": "echo 'No Plugins Specified'"
+    "install:plugins": "cordova plugin add https://github.com/randdusing/BluetoothLE && cordova plugin add cordova-plugin-device"
   },
   "author": "Daniel Atkinson",
   "license": "MIT",
   "dependencies": {
+    "bower": "^1.4.1",
     "cordova": "^5.1.1",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^2.3.1",

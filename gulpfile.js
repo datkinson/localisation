@@ -23,7 +23,9 @@ gulp.task('styles', function() {
 });
 
 gulp.task('scripts', function() {
-  return gulp.src(['app/scripts/default.js',
+  return gulp.src([
+      'app/assets/libs/socket.io-client/socket.io.js',
+      'app/scripts/default.js',
     ])
     .pipe(plumber())
     .pipe(concat('app.js'))

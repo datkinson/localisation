@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="link.bastet.localisation" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Localisation</name>
+    <description>
+        A application for using bluetooth stuff.
+    </description>
+    <author email="hourd.tasa@gmail.com" href="https://bastet.link">
+        bastet team
+    </author>
+    <content src="index.html" />
+
+    <icon src="res/icon.png" />
+
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <icon src="res/android/icon.png" density="ldpi" />
+        <icon src="res/android/icon.png" density="mdpi" />
+        <icon src="res/android/icon.png" density="hdpi" />
+        <icon src="res/android/icon.png" density="xhdpi" />
+     </platform>
+    <platform name="windows8">
+        <icon src="res/windows/icon.png" />
+        <icon src="res/windows/icon-150.png" width="150" height="150" />
+        <icon src="res/windows/icon-30.png" width="30" height="30" />
+        <icon src="res/windows/icon-50.png" width="50" height="50" />
+        <icon src="res/windows/icon-70.png" width="70" height="70" />
+        <icon src="res/windows/icon-99.png" width="99" height="99" />
+        <icon src="res/windows/icon-106.png" width="106" height="106" />
+        <icon src="res/windows/icon-120.png" width="120" height="120" />
+        <icon src="res/windows/icon-159.png" width="159" height="159" />
+        <icon src="res/windows/icon-170.png" width="170" height="170" />
+        <icon src="res/windows/icon-310.png" width="310" height="310" />
+        <icon src="res/windows/icon-360.png" width="360" height="360" />
+        <splash src="res/windows/splashscreen-150.png" width="310" height="150"/>
+        <splash src="res/windows/splashscreen-300.png" width="620" height="300"/>
+        <splash src="res/windows/splashscreen-360.png" width="744" height="360"/>
+        <splash src="res/windows/splashscreen-1280.png" width="768" height="1280"/>
+        <splash src="res/windows/splashscreen-1920.png" width="1152" height="1920"/>
+     </platform>
+
+    <preference name="SplashScreenDelay" value="10000" />
+    <preference name="DisallowOverscroll" value="true" />
+
+    <plugin name="cordova-plugin-whitelist" version="1" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
+</widget>

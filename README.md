@@ -1,4 +1,4 @@
-# Cordova application for playign with BLE
+# Cordova application for playing with BLE
 
 ## Requirements
 

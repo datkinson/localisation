@@ -1,5 +1,6 @@
 var deviceId;
-
+var message = 'null';
+var enabled = false;
 var app = {
     initialize: function() {
         this.bindEvents();
@@ -50,8 +51,9 @@ function scanResult(result) {
         submitReading({
             mac: result.address,
             client: deviceId,
-            signal: ""+result.rssi+""
-        });        
+            signal: ""+result.rssi+"",
+            message: message
+        });
     }
 
 }
@@ -61,15 +63,38 @@ function scanError(error) {
 }
 
 
-var socket = io('http://experimental.noprobe.uk/');
+var socket = io('http://experimental.noprobe.co.uk/');
 
 socket.on('connect', function(){
-    alert('Socket connected');
+    console.debug('Socket connected');
 });
 
 function submitReading(reading) {
-    console.log('Reading: ', reading);
-    socket.emit('submitLog', reading);
+    if(enabled){
+      console.log('Reading: ', reading);
+      socket.emit('submitNewLog', reading);
+    }
 }
 
 app.initialize();
+
+
+$( ".state" ).click(function() {
+  if($(this).val() == 'on') {
+    enabled = true;
+    $('.enabled').text('Enabled');
+  } else if ($(this).val() == 'off') {
+    $('.enabled').text('Disabled');
+    enabled = false;
+  }
+});
+
+$('.distance').click(function() {
+  message = $(this).val();
+  $('.message-status').text(message);
+});
+
+$('.submit').click(function() {
+  message = $('.misc').val();
+  $('.message-status').text(message);
+});

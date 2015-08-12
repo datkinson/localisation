@@ -11,10 +11,25 @@
     </head>
     <body>
         <div class="app">
-            <h1>Localisation</h1>
+            <h1 class="enabled">Localisation</h1>
             <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
+                <p class="event listening message-status">Connecting to Device</p>
+                <p class="event received message-status">Device is Ready</p>
+            </div>
+            <div class="states">
+              <button class="state" value="on">On</button>
+              <button class="state" value="off">Off</button>
+            </div>
+            <div class="distances">
+              <button class="distance" value="1">1m</button>
+              <button class="distance" value="2">2m</button>
+              <button class="distance" value="3">3m</button>
+              <button class="distance" value="4">4m</button>
+              <button class="distance" value="5">5m</button>
+            </div>
+            <div class="free-input">
+              <input type="text" name="misc" class="misc">
+              <input type="submit" value="Submit" class="submit">
             </div>
         </div>
         <script type="text/javascript" src="cordova.js"></script>

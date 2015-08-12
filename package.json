@@ -20,7 +20,7 @@
     "run:android": "cordova run android",
     "run:ios": "cordova run ios",
     "run:windows": "cordova run windows",
-    "install:plugins": "cordova plugin add https://github.com/randdusing/BluetoothLE && cordova plugin add cordova-plugin-device"
+    "install:plugins": "cordova plugin add /home/dan/Projects/BluetoothLE && cordova plugin add cordova-plugin-device"
   },
   "author": "Daniel Atkinson",
   "license": "MIT",

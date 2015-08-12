@@ -24,6 +24,7 @@ gulp.task('styles', function() {
 
 gulp.task('scripts', function() {
   return gulp.src([
+      'app/assets/libs/jquery/dist/jquery.js',
       'app/assets/libs/socket.io-client/socket.io.js',
       'app/scripts/default.js',
     ])

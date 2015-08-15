@@ -4,6 +4,7 @@ var enabled = false;
 
 var positionVector = {};
 var locations = {};
+var tempVectors = [];
 
 var app = {
     initialize: function() {
@@ -61,9 +62,11 @@ function scanError(error) {
 
 function submitReading(reading) {
     //console.debug(reading);
-
+    if(window.enabled) {
+      window.tempVectors.push(reading);
+    }
     window.positionVector[reading.mac] = reading;
-    console.debug(window.positionVector);
+    // console.debug(window.positionVector);
     showVectors();
 }
 
@@ -79,6 +82,7 @@ $( ".state" ).click(function() {
     $('.enabled').text('Disabled');
     enabled = false;
     console.log('off');
+    createLocation(window.message);
   }
 });
 
@@ -90,17 +94,19 @@ $('.distance').click(function() {
 $('.submit').click(function() {
   message = $('.misc').val();
   $('.message-status').text(message);
-  window.locations[message] = JSON.parse(JSON.stringify(window.positionVector));
-  console.log(window.locations);
+  //window.locations[message] = JSON.parse(JSON.stringify(window.positionVector));
+  //console.log(window.locations);
 });
 
 
 function showVectors() {
   var vectorhtml = $('.vectors');
+  var status = $('.current-status');
   vectorhtml.html('');
   for (var key in window.locations) {
     vectorhtml.append(key + ' - ' + calculateDistance(window.locations[key], window.positionVector) + '<br />');
   }
+  status.html('<h2>'+window.message+': '+window.tempVectors.length+'</h2>');
 }
 
 function calculateDistance(a, b) {
@@ -113,4 +119,26 @@ function calculateDistance(a, b) {
     result += Math.pow((a[key].signal - b[key].signal), 2);
   }
   return result;
+}
+
+function createLocation(message) {
+  var MACS = {};
+  var results = {};
+  window.tempVectors.forEach(function(item){
+    if(!MACS.hasOwnProperty(item.mac)){
+      MACS[item.mac] = [];
+    }
+    MACS[item.mac].push(item);
+  });
+
+  for(var key in MACS) {
+    var totalSignal = 0;
+    for(var index in MACS[key]) {
+      totalSignal += parseInt(MACS[key][index].signal);
+    }
+    totalSignal = totalSignal / MACS[key].length;
+    results[key] = {'signal': totalSignal};
+  }
+  window.locations[message] = results;
+  window.tempVectors = [];
 }

@@ -2,9 +2,9 @@ var deviceId;
 var message = 'null';
 var enabled = false;
 
-var positionVector = {};
+var positionVector = new KalmanFilterVector(1);
 var locations = {};
-var tempVectors = [];
+var featurePositionVector = null;
 
 var app = {
     initialize: function() {
@@ -48,12 +48,11 @@ function scanResult(result) {
         submitReading({
             mac: result.address,
             client: deviceId,
-            signal: ""+result.rssi+"",
+            signal: result.rssi,
             message: message,
             time: new Date()
         });
     }
-
 }
 
 function scanError(error) {
@@ -61,12 +60,24 @@ function scanError(error) {
 }
 
 function submitReading(reading) {
-    //console.debug(reading);
+
     if(window.enabled) {
-      window.tempVectors.push(reading);
+      window.featurePositionVector.add(reading.mac, reading.signal);
+
+      var txt = "<ul><li>" + window.featurePositionVector.count + "</li>";
+
+      var covs = window.featurePositionVector.covariance;
+      for (var k in covs) {
+        txt += "<li>" + covs[k] + "</li>";
+      }
+
+      txt += "</ul>";
+
+      $(".count").html(txt);
     }
-    window.positionVector[reading.mac] = reading;
-    // console.debug(window.positionVector);
+
+    window.positionVector.add(reading.mac, reading.signal);
+
     showVectors();
 }
 
@@ -75,6 +86,7 @@ app.initialize();
 
 $( ".state" ).click(function() {
   if($(this).val() == 'on') {
+    featurePositionVector = new KalmanFilterVector(1);
     enabled = true;
     console.log('on');
     $('.enabled').text('Enabled');
@@ -83,6 +95,8 @@ $( ".state" ).click(function() {
     enabled = false;
     console.log('off');
     createLocation(window.message);
+  } else if ($(this).val() == "clear") {
+    window.positionVector = new KalmanFilterVector(1);
   }
 });
 
@@ -94,8 +108,6 @@ $('.distance').click(function() {
 $('.submit').click(function() {
   message = $('.misc').val();
   $('.message-status').text(message);
-  //window.locations[message] = JSON.parse(JSON.stringify(window.positionVector));
-  //console.log(window.locations);
 });
 
 
@@ -104,41 +116,55 @@ function showVectors() {
   var status = $('.current-status');
   vectorhtml.html('');
   for (var key in window.locations) {
-    vectorhtml.append(key + ' - ' + calculateDistance(window.locations[key], window.positionVector) + '<br />');
+    vectorhtml.append(key + ' - ' + calculateDistance(window.locations[key], window.positionVector.value) + '<br />');
   }
-  status.html('<h2>'+window.message+': '+window.tempVectors.length+'</h2>');
 }
 
 function calculateDistance(a, b) {
   var result = 0;
 
-  for (var key in a) {
-    if(!b.hasOwnProperty(key)){
-      continue;
-    }
-    result += Math.pow((a[key].signal - b[key].signal), 2);
+  var keys = Object.keys(a).concat(Object.keys(b));
+
+  for (var index in keys) {
+
+    var key = keys[index];
+
+    var va = a.hasOwnProperty(key) ? a[key] : -100;
+    var vb = b.hasOwnProperty(key) ? b[key] : -100;
+
+    result += Math.pow(va - vb, 2);
   }
-  return result;
+
+  return Math.sqrt(result);
 }
 
 function createLocation(message) {
-  var MACS = {};
-  var results = {};
-  window.tempVectors.forEach(function(item){
-    if(!MACS.hasOwnProperty(item.mac)){
-      MACS[item.mac] = [];
-    }
-    MACS[item.mac].push(item);
-  });
-
-  for(var key in MACS) {
-    var totalSignal = 0;
-    for(var index in MACS[key]) {
-      totalSignal += parseInt(MACS[key][index].signal);
-    }
-    totalSignal = totalSignal / MACS[key].length;
-    results[key] = {'signal': totalSignal};
-  }
-  window.locations[message] = results;
-  window.tempVectors = [];
+  window.locations[message] = window.featurePositionVector.value;
+  window.enabled = false;
 }
+
+
+var dist = 0;
+
+function handleMotionEvent(event) {
+
+  var dt = event.interval / 1000;
+
+  var dx = event.acceleration.x * dt;
+  var dy = event.acceleration.y * dt;
+  var dz = event.acceleration.z * dt;
+
+  var speed  = Math.sqrt(Math.pow(dx, 2), Math.pow(dy, 2), Math.pow(dz, 2));
+  if (speed < 0.001) {
+    speed = 0;
+  }
+  window.dist += speed;
+
+  if(window.dist > 1) {
+    window.dist = 0;
+    window.positionVector = new KalmanFilterVector(1);
+  }
+  $('.distance').text('Distance: ' + window.dist);
+}
+
+window.addEventListener("devicemotion", handleMotionEvent, true);

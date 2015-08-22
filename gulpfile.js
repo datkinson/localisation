@@ -26,13 +26,15 @@ gulp.task('scripts', function() {
   return gulp.src([
       'app/assets/libs/jquery/dist/jquery.js',
       'app/assets/libs/socket.io-client/socket.io.js',
+      'app/scripts/kalman.js',
+      'app/scripts/vectors.js',
       'app/scripts/default.js',
     ])
     .pipe(plumber())
     .pipe(concat('app.js'))
     .pipe(gulp.dest('www/scripts'))
     .pipe(rename({suffix: '.min'}))
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(gulp.dest('www/scripts'));
 });
 

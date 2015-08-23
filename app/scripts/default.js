@@ -64,15 +64,12 @@ function submitReading(reading) {
     if(window.enabled) {
       window.featurePositionVector.add(reading.mac, reading.signal);
 
-      var txt = "<ul><li>" + window.featurePositionVector.count + "</li>";
-
+      var txt ='<ul class="list-group"><li class="list-group-item"><span class="badge">' + window.featurePositionVector.count + '</span>Beacons:</li>';
       var covs = window.featurePositionVector.covariance;
       for (var k in covs) {
-        txt += "<li>" + covs[k] + "</li>";
+        txt += '<li class="list-group-item"><span class="badge">' + covs[k].toFixed(6) + '</span>' + k + '</li>';
       }
-
-      txt += "</ul>";
-
+      txt += '</ul>';
       $(".count").html(txt);
     }
 
@@ -84,18 +81,18 @@ function submitReading(reading) {
 app.initialize();
 
 
-$( ".state" ).click(function() {
-  if($(this).val() == 'on') {
+$( ".state" ).click(function(event) {
+  event.preventDefault();
+  if($(this).text() == 'On') {
     featurePositionVector = new KalmanFilterVector(1);
     enabled = true;
-    console.log('on');
     $('.enabled').text('Enabled');
-  } else if ($(this).val() == 'off') {
+  } else if ($(this).text() == 'Off') {
     $('.enabled').text('Disabled');
     enabled = false;
-    console.log('off');
+    $(".count").html('');
     createLocation(window.message);
-  } else if ($(this).val() == "clear") {
+  } else if ($(this).text() == "Clear") {
     window.positionVector = new KalmanFilterVector(1);
   }
 });
@@ -113,11 +110,12 @@ $('.submit').click(function() {
 
 function showVectors() {
   var vectorhtml = $('.vectors');
-  var status = $('.current-status');
   vectorhtml.html('');
+  vectorhtml.append('<ul class="list-group">');
   for (var key in window.locations) {
-    vectorhtml.append(key + ' - ' + calculateDistance(window.locations[key], window.positionVector.value) + '<br />');
+    vectorhtml.append('<li class="list-group-item"><span class="badge">' + calculateDistance(window.locations[key], window.positionVector.value).toFixed(6) + '</span>' + key + '</li>');
   }
+  vectorhtml.append('</ul>');
 }
 
 function calculateDistance(a, b) {
@@ -145,6 +143,7 @@ function createLocation(message) {
 
 
 var dist = 0;
+var prevDist = 0
 
 function handleMotionEvent(event) {
 
@@ -164,7 +163,12 @@ function handleMotionEvent(event) {
     window.dist = 0;
     window.positionVector = new KalmanFilterVector(1);
   }
-  $('.distance').text('Distance: ' + window.dist);
+  // $('.distance').text('Distance: ' + window.dist);
+  if(window.dist != window.prevDist) {
+    window.prevDist = window.dist;
+    var distPercentage = window.dist * 200;
+    $('.distance').css('width', distPercentage + '%');
+  }
 }
 
 window.addEventListener("devicemotion", handleMotionEvent, true);

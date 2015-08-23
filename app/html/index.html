@@ -11,24 +11,35 @@
     </head>
     <body>
         <div>
-            <div class="current-status">
-              None
-            </div>
             <div class="states">
-              <button class="state" value="on">On</button>
-              <button class="state" value="off">Off</button>
-              <button class="state" value="clear">Clear</button>
+              <div class="btn-group btn-group-justified">
+                <a href="#" class="btn btn-default state" value="on">On</a>
+                <a href="#" class="btn btn-default state" value="off">Off</a>
+                <a href="#" class="btn btn-default state" value="clear">Clear</a>
+              </div>
             </div>
-            <div class="free-input">
-              <input type="text" name="misc" class="misc">
-              <input type="submit" value="Submit" class="submit">
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" class="form-control misc">
+                <span class="input-group-btn">
+                  <button class="btn btn-default submit" type="button">Submit</button>
+                </span>
+              </div>
             </div>
         </div>
-        <div class="count">0</div>
-        <div class="distance"></div>
-        <div class="vectors">
-          None
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Motion Reset</h3>
+          </div>
+          <div class="panel-body">
+            <div class="progress progress-striped">
+              <div class="progress-bar progress-bar-info distance" style="width: 20%"></div>
+            </div>
+          </div>
         </div>
+
+        <div class="vectors"></div>
+        <div class="count"></div>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="scripts/app.min.js"></script>
     </body>

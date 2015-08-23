@@ -155,12 +155,12 @@ function handleMotionEvent(event) {
   var dz = event.acceleration.z * dt;
 
   var speed  = Math.sqrt(Math.pow(dx, 2), Math.pow(dy, 2), Math.pow(dz, 2));
-  if (speed < 0.001) {
+  if (speed < 0.01) {
     speed = 0;
   }
   window.dist += speed;
 
-  if(window.dist > 1) {
+  if(window.dist > 0.5) {
     window.dist = 0;
     window.positionVector = new KalmanFilterVector(1);
   }

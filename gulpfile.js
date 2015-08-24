@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     ignore = require('gulp-ignore'),
     concat = require('gulp-concat'),
     newer = require('gulp-newer'),
-    plumber = require('gulp-plumber');
+    plumber = require('gulp-plumber'),
+    babel = require('gulp-babel');
 
 gulp.task('styles', function() {
   return gulp.src('app/less/app.less')
@@ -25,7 +26,7 @@ gulp.task('styles', function() {
 gulp.task('scripts', function() {
   return gulp.src([
       'app/assets/libs/jquery/dist/jquery.js',
-      'app/assets/libs/socket.io-client/socket.io.js',
+      'app/assets/libs/bootstrap/dist/js/bootstrap.js',
       'app/scripts/kalman.js',
       'app/scripts/vectors.js',
       'app/scripts/default.js',
@@ -35,6 +36,7 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest('www/scripts'))
     .pipe(rename({suffix: '.min'}))
     //.pipe(uglify())
+    .pipe(babel())
     .pipe(gulp.dest('www/scripts'));
 });
 
